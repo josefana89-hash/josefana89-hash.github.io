@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="온라인 클래식 음악 박물관 — 소장품, 연구, 전시, 교육 콘텐츠를 웹에서 경험하는 공간" />
+  <title>온라인 클래식 음악 박물관</title>
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1620;
+      --text:#e9eef5;
+      --muted:#a9b3c1;
+      --line:rgba(255,255,255,.10);
+      --accent:#7aa2ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1120px;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", Arial, "Helvetica Neue", Helvetica, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(1200px 700px at 70% -10%, rgba(122,162,255,.18), transparent 55%),
+                  radial-gradient(900px 600px at 0% 10%, rgba(255,255,255,.06), transparent 55%),
+                  var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ opacity: .92; }
+
+    /* Layout */
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,20,.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(122,162,255,.95), rgba(122,162,255,.2));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .brand small{
+      display:block;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0;
+      margin-top: 1px;
+    }
+
+    nav ul{
+      list-style:none;
+      display:flex;
+      gap: 6px;
+      padding:0;
+      margin:0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    nav a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    nav a:hover{
+      border-color: var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Hero */
+    .hero{
+      padding: 56px 0 26px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    .card{
+      background: rgba(15,22,32,.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero-card{
+      padding: 30px;
+      position: relative;
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 999px;
+      box-shadow: 0 0 0 6px rgba(122,162,255,.14);
+    }
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(28px, 3.4vw, 44px);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 60ch;
+    }
+    .cta-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.06); }
+    .btn.primary{
+      border-color: rgba(122,162,255,.45);
+      background: rgba(122,162,255,.16);
+    }
+    .btn.primary:hover{ background: rgba(122,162,255,.22); }
+
+    /* Image placeholder (for later) */
+    .image-slot{
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      min-height: 260px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+        radial-gradient(700px 240px at 40% 20%, rgba(122,162,255,.18), transparent 55%);
+      border: 1px dashed rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      gap: 8px;
+      text-align: center;
+    }
+    .image-slot strong{ font-size: 14px; }
+    .image-slot span{
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 42ch;
+    }
+    .image-slot code{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(233,238,245,.85);
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 6px 8px;
+      border-radius: 10px;
+      display:inline-block;
+      margin-top: 6px;
+    }
+
+    /* Sections */
+    section{
+      padding: 34px 0;
+    }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    h2{
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+    }
+    .sub{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 70ch;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .col-6{ grid-column: span 6; }
+    .col-4{ grid-column: span 4; }
+    .col-8{ grid-column: span 8; }
+    .col-12{ grid-column: span 12; }
+
+    .panel{
+      padding: 18px;
+      background: rgba(15,22,32,.62);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .panel h3{
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+    .panel p{ margin: 0; color: var(--muted); font-size: 14px; }
+    .list{
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .list li{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .badge{
+      flex: 0 0 auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(233,238,245,.85);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+      margin-top: 1px;
+    }
+
+    /* Project cards */
+    .proj{
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(15,22,32,.62);
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .proj-top{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .proj-title{
+      margin:0;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+    .tag{
+      font-size: 12px;
+      color: rgba(233,238,245,.86);
+      border: 1px solid rgba(122,162,255,.35);
+      background: rgba(122,162,255,.12);
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .proj p{ margin:0; color: var(--muted); font-size: 14px; }
+    .proj a.link{
+      margin-top: 2px;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-weight: 700;
+      color: rgba(233,238,245,.92);
+    }
+    .proj a.link span{ color: var(--accent); }
+
+    /* Contact */
+    form{
+      display:grid;
+      gap: 10px;
+    }
+    label{
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    input, textarea{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      outline: none;
+      font-family: var(--sans);
+      font-size: 14px;
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+    input:focus, textarea:focus{
+      border-color: rgba(122,162,255,.55);
+      box-shadow: 0 0 0 4px rgba(122,162,255,.12);
+    }
+    .fine{
+      font-size: 12px;
+      color: rgba(169,179,193,.9);
+      margin: 8px 0 0;
+    }
+
+    footer{
+      border-top: 1px solid var(--line);
+      padding: 22px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .col-6, .col-4, .col-8{ grid-column: span 12; }
+      nav ul{ gap: 4px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="홈으로">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            온라인 클래식 음악 박물관
+            <small>Collections · Research · Exhibitions · Learning</small>
+          </div>
+        </a>
+
+        <nav aria-label="주요 섹션">
+          <ul>
+            <li><a href="#about">소개</a></li>
+            <li><a href="#tech">기술</a></li>
+            <li><a href="#projects">프로젝트</a></li>
+            <li><a href="#contact">연락처</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO / INTRO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="card hero-card">
+            <div class="kicker"><span class="dot" aria-hidden="true"></span> Online Classic Music Museum</div>
+            <h1>클래식 음악을 “소장”하고<br/>“전시”하고 “학습”하는 웹 박물관</h1>
+            <p class="lead">
+              온라인에서 음악 관련 소장품(악보·레코딩·공연 자료 등)을 모으고,
+              연구·전시·교육 콘텐츠로 연결하는 미니멀한 아카이브형 웹사이트.
+            </p>
+
+            <div class="cta-row">
+              <a class="btn primary" href="#projects">프로젝트 보기</a>
+              <a class="btn" href="#contact">연락하기</a>
+            </div>
+
+            <p class="fine">
+              * 이 페이지는 GitHub Pages에서 바로 실행되는 단일 <code>index.html</code> 템플릿이야.
+            </p>
+          </div>
+
+          <div class="card" style="padding: 18px;">
+            <!-- 나중에 이미지 넣을 자리 -->
+            <div class="image-slot" role="img" aria-label="소개 이미지 자리">
+              <strong>여기에 소개 이미지/포스터/대표 사진 넣기</strong>
+              <span>
+                나중에 <code>img/hero.jpg</code> 같은 파일을 추가한 뒤,
+                아래 주석 부분의 &lt;img&gt;만 활성화하면 돼.
+              </span>
+              <code>&lt;img src="img/hero.jpg" alt="대표 이미지" /&gt;</code>
+            </div>
+
+            <!--
+              이미지 적용 예시 (원하면 주석 해제하고 위 image-slot 삭제):
+              <img src="img/hero.jpg" alt="대표 이미지" style="width:100%;height:auto;border-radius:18px;border:1px solid rgba(255,255,255,.12);" />
+            -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>소개</h2>
+            <p class="sub">이 웹사이트가 무엇을 수집하고, 어떤 방식으로 전시/교육으로 연결하는지 한 번에 보여주는 섹션.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel col-6">
+            <h3>미션</h3>
+            <p>클래식 음악 관련 자료를 체계적으로 수집·정리하고, 이해 가능한 전시/교육 단위로 재구성한다.</p>
+            <ul class="list">
+              <li><span class="badge">COLLECT</span> 악보, 공연 프로그램, 레코딩, 인터뷰, 사진, 교육 자료</li>
+              <li><span class="badge">CURATE</span> 주제/시대/작곡가/장르별 구조화</li>
+              <li><span class="badge">LEARN</span> 관람자가 스스로 탐색하고 학습하도록 설계</li>
+            </ul>
+          </div>
+
+          <div class="panel col-6">
+            <h3>구성</h3>
+            <p>처음엔 가볍게 시작하고, 필요할 때 기능을 늘릴 수 있게 설계한다.</p>
+            <ul class="list">
+              <li><span class="badge">ARCHIVE</span> 소장품 목록 + 메타데이터(출처/연도/권리)</li>
+              <li><span class="badge">EXHIBIT</span> 큐레이션 전시(텍스트·이미지·오디오)</li>
+              <li><span class="badge">EDU</span> 교육 콘텐츠(워크시트/영상/가이드)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH -->
+    <section id="tech">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>기술</h2>
+            <p class="sub">GitHub Pages에 올렸을 때 “그냥 돌아가게” 하는 최소 기술 스택. 필요하면 점진적으로 확장.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel col-4">
+            <h3>정적 사이트</h3>
+            <p>HTML/CSS/JS만으로 동작. 배포는 GitHub Pages.</p>
+          </div>
+          <div class="panel col-4">
+            <h3>콘텐츠 구조</h3>
+            <p>초기엔 섹션 중심. 나중엔 페이지 분리(컬렉션/전시/교육).</p>
+          </div>
+          <div class="panel col-4">
+            <h3>확장 옵션</h3>
+            <p>필요하면 JSON 데이터 + 검색, 또는 Jekyll/Next.js로 전환.</p>
+          </div>
+
+          <div class="panel col-12">
+            <h3>로드맵 예시</h3>
+            <ul class="list" style="margin-top:10px;">
+              <li><span class="badge">v0</span> 단일 페이지(현재) — 소개/기술/프로젝트/연락처</li>
+              <li><span class="badge">v1</span> 소장품 페이지 추가 — 카드 목록 + 태그 필터</li>
+              <li><span class="badge">v2</span> 전시 페이지 — 큐레이션 스토리 + 오디오 임베드</li>
+              <li><span class="badge">v3</span> 교육 섹션 — 다운로드 자료 + 짧은 가이드</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>프로젝트</h2>
+            <p class="sub">지금 당장 올릴 수 있는 “구체적 결과물 단위”로 나눠두면 사이트가 빨리 살아남.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="proj col-4">
+            <div class="proj-top">
+              <h3 class="proj-title">소장품 카탈로그</h3>
+              <span class="tag">Collections</span>
+            </div>
+            <p>악보·LP·공연 자료를 카드 형태로 정리하고, 출처/연도/권리 정보를 함께 기록.</p>
+            <a class="link" href="#" onclick="return false;">상세 준비중 <span>→</span></a>
+          </div>
+
+          <div class="proj col-4">
+            <div class="proj-top">
+              <h3 class="proj-title">큐레이션 전시</h3>
+              <span class="tag">Exhibitions</span>
+            </div>
+            <p>특정 주제(작곡가/시대/도시)로 자료를 엮어 스크롤 전시 형태로 구성.</p>
+            <a class="link" href="#" onclick="return false;">상세 준비중 <span>→</span></a>
+          </div>
+
+          <div class="proj col-4">
+            <div class="proj-top">
+              <h3 class="proj-title">교육 자료실</h3>
+              <span class="tag">Learning</span>
+            </div>
+            <p>워크시트, 짧은 가이드, 추천 감상 루트 등을 PDF/이미지로 제공.</p>
+            <a class="link" href="#" onclick="return false;">상세 준비중 <span>→</span></a>
+          </div>
+
+          <div class="panel col-12">
+            <h3>프로젝트 추가 팁</h3>
+            <p>
+              여기 카드들은 “나중에 파일/페이지로 분리하기 쉽게” 만들어둔 거야.
+              실제 링크가 생기면 <code>href="#"</code>만 바꾸면 돼.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>연락처</h2>
+            <p class="sub">GitHub Pages는 서버가 없어서 폼 전송은 기본으로 안 돼. 대신 이메일/링크를 두거나 외부 폼 서비스를 붙이면 됨.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel col-6">
+            <h3>연락 정보</h3>
+            <ul class="list">
+              <li><span class="badge">EMAIL</span> <a href="mailto:your-email@example.com">your-email@example.com</a></li>
+              <li><span class="badge">GITHUB</span> <a href="https://github.com/your-username" target="_blank" rel="noreferrer">github.com/your-username</a></li>
+              <li><span class="badge">SNS</span> <a href="#" onclick="return false;">추가 예정</a></li>
+            </ul>
+            <p class="fine">* 위 메일/계정은 네 걸로 바꿔.</p>
+          </div>
+
+          <div class="panel col-6">
+            <h3>간단 문의 메모(로컬)</h3>
+            <p style="margin-bottom:10px;">
+              이 폼은 “전송”이 아니라 브라우저에 임시 저장만 해. (서버 없이 동작)
+            </p>
+
+            <form id="noteForm">
+              <div>
+                <label for="name">이름</label>
+                <input id="name" name="name" autocomplete="name" placeholder="이름" />
+              </div>
+              <div>
+                <label for="message">메시지</label>
+                <textarea id="message" name="message" placeholder="남길 메모"></textarea>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                <button class="btn primary" type="submit">메모 저장</button>
+                <button class="btn" type="button" id="clearBtn">메모 지우기</button>
+              </div>
+              <p class="fine" id="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      © <span id="year"></span> 온라인 클래식 음악 박물관. Built for GitHub Pages.
+    </div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Local note form (no server)
+    const form = document.getElementById("noteForm");
+    const statusEl = document.getElementById("status");
+    const clearBtn = document.getElementById("clearBtn");
+    const KEY = "ocmm_contact_note_v1";
+
+    function loadNote(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        const data = JSON.parse(raw);
+        if(data?.name) document.getElementById("name").value = data.name;
+        if(data?.message) document.getElementById("message").value = data.message;
+        if(data?.savedAt) statusEl.textContent = "저장된 메모를 불러왔어.";
+      }catch(e){}
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      localStorage.setItem(KEY, JSON.stringify({
+        name, message, savedAt: Date.now()
+      }));
+
+      statusEl.textContent = "메모 저장 완료 (이 브라우저에만 저장됨).";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      localStorage.removeItem(KEY);
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+      statusEl.textContent = "메모를 지웠어.";
+    });
+
+    loadNote();
+  </script>
+</body>
+</html>
